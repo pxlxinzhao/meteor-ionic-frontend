@@ -1,5 +1,5 @@
 <ion-view view-title="Posts">
-  <ion-content class="padding">
+  <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="post in posts" type="item-text-wrap" href="#">
         <img ng-src="https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png">
@@ -7,5 +7,14 @@
         <p>{{post.message}}</p>
       </ion-item>
     </ion-list>
+
+    <div class="item item-input-inset">
+      <label class="item-input-wrapper">
+        <input type="text" placeholder="Email">
+      </label>
+      <button class="button button-small">
+        Submit
+      </button>
+    </div>
   </ion-content>
 </ion-view>

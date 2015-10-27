@@ -6,6 +6,7 @@ angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope, $http) {
     $http.get(baseUrl + "/post")
       .success(function(data) {
+        console.log(data);
         $scope.posts = data;
       });
   })
