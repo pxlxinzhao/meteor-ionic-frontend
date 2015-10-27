@@ -1,6 +1,14 @@
+var baseUrl = "http://patrickpu.meteor.com";
+//var baseUrl = "http://localhost:3000";
+
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope, $http) {
+    $http.get(baseUrl + "/post")
+      .success(function(data) {
+        $scope.posts = data;
+      });
+  })
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
