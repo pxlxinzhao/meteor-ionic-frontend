@@ -4,11 +4,20 @@ var baseUrl = "http://patrickpu.meteor.com";
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, $http) {
-    $http.get(baseUrl + "/post")
-      .success(function(data) {
-        console.log(data);
-        $scope.posts = data;
-      });
+    refresh();
+
+    $scope.doRefresh = refresh;
+
+    function refresh(){
+      $http.get(baseUrl + "/post")
+        .success(function(data) {
+          console.log(data);
+          $scope.posts = data;
+        }).finally(function() {
+          // Stop the ion-refresher from spinning
+          $scope.$broadcast('scroll.refreshComplete');
+        });
+    }
   })
 
 .controller('ChatsCtrl', function($scope, Chats) {
