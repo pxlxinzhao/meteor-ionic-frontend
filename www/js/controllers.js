@@ -2,7 +2,7 @@
 var baseUrl = "http://localhost:3000";
 var time_format = 'YYYY-MM-DD HH:mm:ss';
 var max_length = 500;
-var limit = 5;
+var limit = 8;
 
 angular.module('starter.controllers', [])
 
@@ -18,6 +18,7 @@ angular.module('starter.controllers', [])
     $scope.refresh = refresh;
     $scope.$state = $state;
     $scope.loadData = load;
+    $scope.canLoad = false; //set to true after refresh
 
     $scope.moreData = function(){
       return true;
@@ -25,74 +26,56 @@ angular.module('starter.controllers', [])
     $scope.formatTime = function(timeStr){
       return moment(timeStr).format(time_format);
     }
+    $scope.loadMore = function() {
+      load();
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    };
 
     function refresh(){
       $scope.pagination = {
         curTime: moment().valueOf(),
         offset: 0,
-        limit: 10
+        limit: limit
       }
 
-      $http({
-        method: 'POST',
-        url: baseUrl + '/post',
-        data: serializeData($scope.pagination),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).then(function(result){
+      post(function(result){
         console.log('Success: ', result);
+        $scope.pagination.offset += $scope.pagination.limit;
         $scope.posts = result.data;
-      }).finally(function() {
-        // Stop the ion-refresher from spinning
+        setTimeout(function(){
+          console.log('can load true');
+          $scope.canLoad = true;
+        }, 1000);
+      },function() {
         $scope.$broadcast('scroll.refreshComplete');
-        $scope.canLoad = true;
       });
     }
 
     function load(){
       if ($scope.pagination) {
-        console.log($scope.pagination);
-        $scope.pagination.offset += $scope.pagination.limit;
-
-        $http({
-          method: 'POST',
-          url: baseUrl + '/post',
-          data: serializeData($scope.pagination),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function(result){
+        post(function(result){
           console.log('Success: ', result);
           if (result.data.length === 0){
+            console.log('can load false');
             $scope.canLoad = false;
             console.log('no more data to load');
           }
-          $scope.posts.concat(result.data);
-        }).finally(function() {
-          // Stop the ion-refresher from spinning
+          $scope.posts = $scope.posts.concat(result.data);
+          $scope.pagination.offset += $scope.pagination.limit;
+        }, function() {
           $scope.$broadcast('scroll.infiniteScrollComplete');
-          $scope.loadStarted = false;
         });
-      }else{
-
       }
     }
 
-    $scope.loadMore = function() {
-      load();
-      //console.log('loading more..');
-      //$scope.loadStarted = false;
-      //if (!$scope.loadStarted){
-      //  $scope.loadStarted = true;
-      //  load();
-      //}
-      //$scope.items.push({ id: $scope.items.length});
-      //
-      //if ( $scope.items.length == 99 ) {
-      //  $scope.canLoad = true;
-      //}
-      $scope.$broadcast('scroll.infiniteScrollComplete');
-    };
-
-    //$scope.items = [];
-
+    function post(then, final){
+      $http({
+        method: 'POST',
+        url: baseUrl + '/post',
+        data: serializeData($scope.pagination),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(then).finally(final);
+    }
   })
 
 .controller('ComposeCtrl', function($scope, $http, $state, $stateParams){

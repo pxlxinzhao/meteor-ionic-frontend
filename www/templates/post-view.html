@@ -31,14 +31,11 @@
         <p class="view-message">{{post.message}}</p>
         <p class="view-time">{{formatTime(post.createdTime)}}</p>
       </ion-item>
-      <!--<ion-item ng-repeat="item in items"-->
-                <!--item="item"-->
-                <!--href="#/item/{{item.id}}">-->
-        <!--Item {{ item.id }}-->
-      <!--</ion-item>-->
     </ion-list>
 
-    <ion-infinite-scroll ng-if="canLoad" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
+    <ion-infinite-scroll ng-if="canLoad" on-infinite="loadMore()" distance="1%">
+    </ion-infinite-scroll>
+
   </ion-content>
 
 </ion-view>
