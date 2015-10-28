@@ -24,7 +24,6 @@
       on-refresh="refresh()">
     </ion-refresher>
 
-<!--&gt;>>>>>> origin/master-->
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="post in posts" type="item-text-wrap" href="#">
         <img ng-src="https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png">
@@ -32,7 +31,14 @@
         <p class="view-message">{{post.message}}</p>
         <p class="view-time">{{formatTime(post.createdTime)}}</p>
       </ion-item>
+      <!--<ion-item ng-repeat="item in items"-->
+                <!--item="item"-->
+                <!--href="#/item/{{item.id}}">-->
+        <!--Item {{ item.id }}-->
+      <!--</ion-item>-->
     </ion-list>
+
+    <ion-infinite-scroll ng-if="canLoad" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
   </ion-content>
 
 </ion-view>

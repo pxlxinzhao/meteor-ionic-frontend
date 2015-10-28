@@ -1,30 +1,98 @@
 //var baseUrl = "http://patrickpu.meteor.com";
 var baseUrl = "http://localhost:3000";
 var time_format = 'YYYY-MM-DD HH:mm:ss';
-var max_length = 10;
+var max_length = 500;
+var limit = 5;
 
 angular.module('starter.controllers', [])
+
 .controller('DashCtrl', function($scope, $http, $state) {
+
     $scope.$on('$ionicView.enter', function(e) {
       refresh();
+    });
+    $scope.$on('$stateChangeSuccess', function() {
+      $scope.loadData();
     });
 
     $scope.refresh = refresh;
     $scope.$state = $state;
+    $scope.loadData = load;
+
+    $scope.moreData = function(){
+      return true;
+    }
     $scope.formatTime = function(timeStr){
       return moment(timeStr).format(time_format);
     }
 
     function refresh(){
-      $http.get(baseUrl + "/post")
-        .success(function(data) {
-          console.log(data);
-          $scope.posts = data;
+      $scope.pagination = {
+        curTime: moment().valueOf(),
+        offset: 0,
+        limit: 10
+      }
+
+      $http({
+        method: 'POST',
+        url: baseUrl + '/post',
+        data: serializeData($scope.pagination),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(function(result){
+        console.log('Success: ', result);
+        $scope.posts = result.data;
+      }).finally(function() {
+        // Stop the ion-refresher from spinning
+        $scope.$broadcast('scroll.refreshComplete');
+        $scope.canLoad = true;
+      });
+    }
+
+    function load(){
+      if ($scope.pagination) {
+        console.log($scope.pagination);
+        $scope.pagination.offset += $scope.pagination.limit;
+
+        $http({
+          method: 'POST',
+          url: baseUrl + '/post',
+          data: serializeData($scope.pagination),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function(result){
+          console.log('Success: ', result);
+          if (result.data.length === 0){
+            $scope.canLoad = false;
+            console.log('no more data to load');
+          }
+          $scope.posts.concat(result.data);
         }).finally(function() {
           // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
-        });;
+          $scope.$broadcast('scroll.infiniteScrollComplete');
+          $scope.loadStarted = false;
+        });
+      }else{
+
+      }
     }
+
+    $scope.loadMore = function() {
+      load();
+      //console.log('loading more..');
+      //$scope.loadStarted = false;
+      //if (!$scope.loadStarted){
+      //  $scope.loadStarted = true;
+      //  load();
+      //}
+      //$scope.items.push({ id: $scope.items.length});
+      //
+      //if ( $scope.items.length == 99 ) {
+      //  $scope.canLoad = true;
+      //}
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    };
+
+    //$scope.items = [];
+
   })
 
 .controller('ComposeCtrl', function($scope, $http, $state, $stateParams){
@@ -60,8 +128,6 @@ angular.module('starter.controllers', [])
       $scope.newPost = {
         name: "Patrick"
       };
-      $scope.curTime = new Date().toISOString;
-      $scope.offset = 0;
     }
   })
 
