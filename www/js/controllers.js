@@ -17,8 +17,17 @@ angular.module('starter.controllers', [])
     }
   })
 
-.controller('ComposeCtrl', function($scope){
-
+.controller('ComposeCtrl', function($scope, $http){
+    $scope.newPost = {
+      name: "Patrick"
+    };
+    $scope.post = function(){
+      $scope.newPost.createdTime = new Date().toISOString();
+      console.log($scope.newPost);
+      $http.post(baseUrl + '/post/create', $scope.newPost).then(function(data){
+        console.log('Success: ', data);
+      })
+    }
   })
 
 .controller('ChatsCtrl', function($scope, Chats) {

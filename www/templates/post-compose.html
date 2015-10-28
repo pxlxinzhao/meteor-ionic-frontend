@@ -1,4 +1,13 @@
 <ion-view view-title="Compose">
 
+  <ion-nav-buttons side="right">
+    <a class="button button-clear
+    button-positive button-icon ion-share" href="/#/tab/compose"
+      ng-click="post()">
+    </a>
+  </ion-nav-buttons>
 
+  <ion-content scroll="false">
+      <textarea ng-model="newPost.message" id="compose-textarea" placeholder="Posts"></textarea>
+  </ion-content>
 </ion-view>
