@@ -1,18 +1,38 @@
 <ion-view view-title="Posts">
+<!--<<<<<<< HEAD-->
+  <!--<ion-nav-buttons side="right">-->
+    <!--<button class="button button-clear button-positive button-icon icon ion-compose"></button>-->
+  <!--</ion-nav-buttons>-->
+  <!--<ion-content>-->
+    <!--<ion-refresher-->
+      <!--pulling-text="Pull to refresh..."-->
+      <!--on-refresh="doRefresh()">-->
+    <!--</ion-refresher>-->
+<!--=======-->
+
   <ion-nav-buttons side="right">
-    <button class="button button-clear button-positive button-icon icon ion-compose"></button>
+    <a class="button button-clear
+    button-positive button-icon
+    ion-compose" href="/#/tab/compose">
+    </a>
   </ion-nav-buttons>
+
   <ion-content>
+
     <ion-refresher
       pulling-text="Pull to refresh..."
-      on-refresh="doRefresh()">
+      on-refresh="refresh()">
     </ion-refresher>
+
+<!--&gt;>>>>>> origin/master-->
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="post in posts" type="item-text-wrap" href="#">
         <img ng-src="https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png">
         <h2>{{post.name}}</h2>
         <p>{{post.message}}</p>
+        <small>{{post.createdTime}}</small>
       </ion-item>
     </ion-list>
   </ion-content>
+
 </ion-view>

@@ -1,12 +1,12 @@
-var baseUrl = "http://patrickpu.meteor.com";
-//var baseUrl = "http://localhost:3000";
+//var baseUrl = "http://patrickpu.meteor.com";
+var baseUrl = "http://localhost:3000";
 
 angular.module('starter.controllers', [])
-
-.controller('DashCtrl', function($scope, $http) {
+.controller('DashCtrl', function($scope, $http, $state) {
     refresh();
 
-    $scope.doRefresh = refresh;
+    $scope.refresh = refresh;
+    $scope.$state = $state;
 
     function refresh(){
       $http.get(baseUrl + "/post")
@@ -16,7 +16,26 @@ angular.module('starter.controllers', [])
         }).finally(function() {
           // Stop the ion-refresher from spinning
           $scope.$broadcast('scroll.refreshComplete');
-        });
+        });;
+    }
+  })
+
+.controller('ComposeCtrl', function($scope, $http, $state, $stateParams){
+    $scope.newPost = {
+      name: "Patrick"
+    };
+    $scope.post = function(){
+      $scope.newPost.createdTime = new Date().toISOString();
+      console.log($scope.newPost);
+      $http({
+        method: 'POST',
+        url: baseUrl + '/post/create',
+        data: serializeData($scope.newPost),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      }).then(function(data){
+        console.log('Success: ', data);
+        $state.transitionTo('tab.dash', null, {reload: true, notify:true});
+      })
     }
   })
 
@@ -44,3 +63,26 @@ angular.module('starter.controllers', [])
     enableFriends: true
   };
 });
+
+
+
+function serializeData( data ) {
+  // If this is not an object, defer to native stringification.
+  if ( ! angular.isObject( data ) ) {
+    return( ( data == null ) ? "" : data.toString() );
+  }
+  var buffer = [];
+  // Serialize each key in the object.
+  for ( var name in data ) {
+    if ( ! data.hasOwnProperty( name ) ) {
+      continue;
+    }
+    var value = data[ name ];
+    buffer.push(
+      encodeURIComponent( name ) + "=" + encodeURIComponent( ( value == null ) ? "" : value )
+    );
+  }
+  // Serialize the buffer and clean it up for transportation.
+  var source = buffer.join( "&" ).replace( /%20/g, "+" );
+  return( source );
+}

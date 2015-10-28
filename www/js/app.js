@@ -50,7 +50,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
-
+  .state('tab.compose', {
+      url: '/compose',
+      views: {
+        'tab-dash': {
+          templateUrl: 'templates/post-compose.html',
+          controller: 'ComposeCtrl'
+        }
+      }
+    })
   .state('tab.chats', {
       url: '/chats',
       views: {
