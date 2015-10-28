@@ -1,12 +1,19 @@
 //var baseUrl = "http://patrickpu.meteor.com";
 var baseUrl = "http://localhost:3000";
+var time_format = 'YYYY-MM-DD HH:mm:ss';
+var max_length = 10;
 
 angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope, $http, $state) {
-    refresh();
+    $scope.$on('$ionicView.enter', function(e) {
+      refresh();
+    });
 
     $scope.refresh = refresh;
     $scope.$state = $state;
+    $scope.formatTime = function(timeStr){
+      return moment(timeStr).format(time_format);
+    }
 
     function refresh(){
       $http.get(baseUrl + "/post")
@@ -21,9 +28,19 @@ angular.module('starter.controllers', [])
   })
 
 .controller('ComposeCtrl', function($scope, $http, $state, $stateParams){
-    $scope.newPost = {
-      name: "Patrick"
-    };
+    createNewPost();
+
+    $scope.maxlength = max_length;
+    $scope.curLength = function(){
+      if ($scope.newPost.message){
+        var message = $scope.newPost.message;
+        var newLines = $scope.newPost.message.match(/(\r\n|\n|\r)/g);
+        var extraLength =  newLines ? newLines.length : 0;
+        return $scope.newPost.message.length + extraLength;
+      }else{
+        return 0;
+      }
+    }
     $scope.post = function(){
       $scope.newPost.createdTime = new Date().toISOString();
       console.log($scope.newPost);
@@ -34,8 +51,17 @@ angular.module('starter.controllers', [])
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       }).then(function(data){
         console.log('Success: ', data);
+        createNewPost();
         $state.transitionTo('tab.dash', null, {reload: true, notify:true});
       })
+    }
+
+    function createNewPost(){
+      $scope.newPost = {
+        name: "Patrick"
+      };
+      $scope.curTime = new Date().toISOString;
+      $scope.offset = 0;
     }
   })
 

@@ -8,6 +8,7 @@
   </ion-nav-buttons>
 
   <ion-content scroll="false">
-      <textarea ng-model="newPost.message" id="compose-textarea" placeholder="Posts"></textarea>
+      <textarea ng-model="newPost.message" id="compose-textarea" placeholder="Posts" maxlength="{{maxlength}}"></textarea>
+      <label class="compose-label">{{curLength()}}/{{maxlength}}</label>
   </ion-content>
 </ion-view>

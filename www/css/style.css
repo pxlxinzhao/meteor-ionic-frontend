@@ -1,5 +1,22 @@
+/*dash*/
+
+p.view-message{
+  white-space: normal;
+  max-height: 300px;
+}
+p.view-time {
+  font-size: 0.7rem;
+  color: darkgray;
+}
+
+/*compose*/
+
 #compose-textarea {
   padding: 15px;
   width: 100%;
   height: 300px;
+}
+.compose-label {
+  padding: 5px;
+  float: right;
 }
