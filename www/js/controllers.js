@@ -4,11 +4,21 @@ var baseUrl = "http://patrickpu.meteor.com";
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, $http) {
-    $http.get(baseUrl + "/post")
-      .success(function(data) {
-        console.log(data);
-        $scope.posts = data;
-      });
+    refresh();
+
+    $scope.refresh = refresh();
+
+    function refresh(){
+      $http.get(baseUrl + "/post")
+        .success(function(data) {
+          console.log(data);
+          $scope.posts = data;
+        });
+    }
+  })
+
+.controller('ComposeCtrl', function($scope){
+
   })
 
 .controller('ChatsCtrl', function($scope, Chats) {
