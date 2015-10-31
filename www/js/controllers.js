@@ -133,10 +133,59 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('AccountCtrl', function($scope, $ionicModal, $timeout, ngFB) {
+    refresh();
+
+    $scope.loggedIn = function(){
+      return !!$scope.user;
+    }
+
+    $scope.fbLogin = function () {
+      $scope.ready = false;
+      ngFB.login({scope: 'email'}).then(
+        function (response) {
+          if (response.status === 'connected') {
+            console.log('Facebook login succeeded');
+            refresh();
+            //$scope.closeLogin();
+          } else {
+            $scope.ready = true;
+            alert('Facebook login failed');
+          }
+        });
+    };
+
+    $scope.fbLogout = function() {
+      $scope.ready = false;
+      console.log($scope.ready);
+      ngFB.logout().then(
+        function() {
+          $scope.user = null;
+          console.log('Logout successful');
+          $scope.ready = true;
+        },
+        function(err){
+          $scope.ready = true;
+          console.log(err);
+        });
+    }
+
+    function refresh(){
+      $scope.ready = false;
+      ngFB.api({
+        path: '/me',
+        params: {fields: 'id,name'}
+      }).then(
+        function (user) {
+          $scope.user = user;
+          $scope.ready = true;
+        },
+        function (error) {
+          console.log('not logged in');
+          $scope.ready = true;
+          //alert('Facebook error: ' + error.error_description);
+        });
+    }
 });
 
 

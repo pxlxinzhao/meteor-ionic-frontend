@@ -1,3 +1,10 @@
+/*angular*/
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+
 /*dash*/
 
 p.view-message{
@@ -19,4 +26,30 @@ p.view-time {
 .compose-label {
   padding: 5px;
   float: right;
+}
+
+/*account*/
+
+.img-div{
+  float: left;
+}
+.content-div{
+  float: left;
+  padding: 5px 15px;
+}
+.avatar {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+.content {
+  padding: 0px 10px 0px 10px;
+}
+.icon-container {
+  width: 28px;
+  display: block;
+  margin: 0 auto;
+}
+.button.button-block.no-margin{
+  margin: 0px;
 }
