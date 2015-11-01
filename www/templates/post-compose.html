@@ -1,14 +1,15 @@
 <ion-view view-title="Compose">
 
   <ion-nav-buttons side="right">
-    <a class="button button-clear
-    button-positive button-icon ion-share" href="/#/tab/compose"
-      ng-click="post()">
-    </a>
+    <button class="button button-clear
+    button-positive button-icon ion-share" href="#"
+            ng-click="post()">
+    </button>
   </ion-nav-buttons>
 
   <ion-content scroll="false">
-      <textarea ng-model="newPost.message" id="compose-textarea" placeholder="Posts" maxlength="{{maxlength}}"></textarea>
+      <textarea ng-model="newPost.message" id="compose-textarea"
+                placeholder="Write your post here" maxlength="{{maxlength}}"></textarea>
       <label class="compose-label">{{curLength()}}/{{maxlength}}</label>
   </ion-content>
 </ion-view>

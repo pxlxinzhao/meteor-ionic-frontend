@@ -19,6 +19,10 @@ angular.module('starter.controllers', [])
     $scope.$state = $state;
     $scope.loadData = load;
     $scope.canLoad = false; //set to true after refresh
+    $scope.goCompose = function(){
+      console.log('go go go');
+      $state.go('tab.compose');
+    }
 
     $scope.moreData = function(){
       return true;
@@ -95,16 +99,20 @@ angular.module('starter.controllers', [])
     $scope.post = function(){
       $scope.newPost.createdTime = new Date().toISOString();
       console.log($scope.newPost);
-      $http({
-        method: 'POST',
-        url: baseUrl + '/post/create',
-        data: serializeData($scope.newPost),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-      }).then(function(data){
-        console.log('Success: ', data);
-        createNewPost();
-        $state.transitionTo('tab.dash', null, {reload: true, notify:true});
-      })
+      if ($scope.newPost && $scope.newPost.message){
+        $http({
+          method: 'POST',
+          url: baseUrl + '/post/create',
+          data: serializeData($scope.newPost),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function(data){
+          console.log('Success: ', data);
+          createNewPost();
+          $state.transitionTo('tab.dash', null, {reload: true, notify:true});
+        })
+      }else{
+        alert('Write something before posting');
+      }
     }
 
     function createNewPost(){
